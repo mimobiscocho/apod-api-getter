@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA APOD Image</title>
+</head>
+<body>
+    <h1>Image du jour - NASA APOD</h1>
+    <img id="hdImage" src="" alt="Image HD de la NASA" style="max-width: 100%; height: auto;">
+    <p id="title"></p>
+    <p id="explanation"></p>
+
+    <script>
+
+        const apiKey = "DEMO_KEY";
+
+
+        const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
+
+
+        async function fetchAPOD() {
+            try {
+                let response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("Erreur de requête API");
+
+                let data = await response.json();
+
+
+                if (data.media_type === "image") {
+                    document.getElementById("hdImage").src = data.hdurl;
+                } else {
+                    document.getElementById("hdImage").alt = "Ce n'est pas une image aujourd'hui.";
+                }
+
+
+                document.getElementById("title").textContent = `📌 ${data.title}`;
+                document.getElementById("explanation").textContent = data.explanation;
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById("explanation").textContent = "Erreur lors du chargement des données.";
+            }
+        }
+
+        fetchAPOD();
+    </script>
+</body>
+</html>
